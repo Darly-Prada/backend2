@@ -1,0 +1,17 @@
+<!-- views/cart.handlebars -->
+<h1>Carrito de Compras</h1>
+
+{{#if cart.products.length}}
+  <ul>
+    {{#each cart.products}}
+      <li>
+        {{this.productId.title}} - {{this.quantity}} - Precio: ${{this.price}} 
+        <a href="/api/carts/{{../cartId}}/products/{{this.productId._id}}/remove">Eliminar</a>
+      </li>
+    {{/each}}
+  </ul>
+  <p>Total: ${{cart.total}}</p>
+  <a href="/api/carts/{{cartId}}/clear">Vaciar Carrito</a>
+{{else}}
+  <p>El carrito está vacío.</p>
+{{/if}}
