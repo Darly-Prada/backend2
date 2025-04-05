@@ -35,9 +35,17 @@ cartSchema.methods.calculateTotal = function() {
     const productQuantity = product.quantity || 0;
     return total + (productPrice * productQuantity);
   }, 0);
-
+  
   return this.total;
 };
 
+// Asegúrate de actualizar el total cada vez que se modifique el carrito
+cartSchema.pre('save', function(next) {
+  this.calculateTotal();
+  next();
+});
+
 // Crear el modelo para el carrito
-export const cartModel = model(cartCollection, cartSchema);
+export const cartModel = model(cartCollection, cartSchema); 
+
+ 

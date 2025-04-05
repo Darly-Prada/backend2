@@ -1,17 +1,28 @@
-<!-- views/cart.handlebars -->
-<h1>Carrito de Compras</h1>
+<h1>Carritos de Compras</h1>
 
-{{#if cart.products.length}}
-  <ul>
-    {{#each cart.products}}
-      <li>
-        {{this.productId.title}} - {{this.quantity}} - Precio: ${{this.price}} 
-        <a href="/api/carts/{{../cartId}}/products/{{this.productId._id}}/remove">Eliminar</a>
-      </li>
-    {{/each}}
-  </ul>
-  <p>Total: ${{cart.total}}</p>
-  <a href="/api/carts/{{cartId}}/clear">Vaciar Carrito</a>
+{{#if carts.length}}
+  {{#each carts}}
+    <h2>Carrito ID: {{this._id}}</h2>
+    
+    {{#if this.products.length}}
+      <ul>
+        {{#each this.products}}
+          <li>
+            Producto: {{this.productId.title}} <br>
+            Cantidad: {{this.quantity}} <br>
+            Precio: ${{this.price}} <br>
+            <a href="/api/carts/{{../this._id}}/products/{{this.productId._id}}/remove">Eliminar</a>
+          </li>
+        {{/each}}
+      </ul>
+      <p><strong>Total: ${{this.total}}</strong></p>
+      <a href="/api/carts/{{this._id}}/clear">Vaciar Carrito</a>
+    {{else}}
+      <p>Este carrito está vacío.</p>
+    {{/if}}
+
+    <hr>
+  {{/each}}
 {{else}}
-  <p>El carrito está vacío.</p>
+  <p>No hay carritos disponibles.</p>
 {{/if}}

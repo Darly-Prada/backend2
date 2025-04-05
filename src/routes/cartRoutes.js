@@ -1,9 +1,11 @@
 import express from 'express';
-import { createCart, getCartById, addProductToCart, removeProductFromCart, clearCart } from '../managers/cartManager.js';
+import { createCart, getCartById, addProductToCart, removeProductFromCart, clearCart } from '../managers/cartManager.js';  // Importa las funciones desde cartManager
 import { cartModel } from '../models/cartModel.js';
+
 
 const router = express.Router();
 
+// Ruta para crear un carrito
 router.post('/', async (req, res) => {
   try {
     const newCart = await createCart();
@@ -13,16 +15,25 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
-    try {
+// Ruta para obtener los carritos en formato HTML con Handlebars
+router.get('/view', async (req, res) => {
+  try {
+    // Obtener todos los carritos
+    const carts = await cartModel.find().populate('products.productId');  // Asegúrate de poblar correctamente
+    const userCart = await cartModel.findOne({ user: req.user._id }).populate('products.productId');  // Obtener el carrito del usuario logueado
+    
+    res.render('home', {  // Renderizamos la vista de home.hbs
+      products: [],  // Asegúrate de pasar los productos al renderizado
+      cart: userCart,  // Pasa el carrito correspondiente
+      cartId: userCart._id // Pasa el cartId
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
-      const carts = await cartModel.find();   
-      res.status(200).json(carts);   
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
+// Ruta para obtener un carrito por su ID
 router.get('/:cid', async (req, res) => {
   const { cid } = req.params;
   try {
@@ -33,6 +44,7 @@ router.get('/:cid', async (req, res) => {
   }
 });
 
+// Ruta para agregar un producto al carrito
 router.post('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
   const { quantity } = req.body;
@@ -44,6 +56,7 @@ router.post('/:cid/products/:pid', async (req, res) => {
   }
 });
 
+// Ruta para eliminar un producto del carrito
 router.delete('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
   try {
@@ -54,6 +67,7 @@ router.delete('/:cid/products/:pid', async (req, res) => {
   }
 });
 
+// Ruta para vaciar el carrito
 router.delete('/:cid/clear', async (req, res) => {
   const { cid } = req.params;
   try {

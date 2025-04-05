@@ -1,23 +1,14 @@
-import { model, Schema } from "mongoose";
+import mongoose from 'mongoose';
 
-
-
-const productSchema = new Schema({
-  title: String,
-  description: String,
-  price: {
-    type: Number,
-    required: true,
-  },
-  stock: {
-    type: Number,
-    required: true,
-  },
-  category: String,
-  status: Boolean,
+const productSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  stock: { type: Number, required: true },
+  category: { type: String, required: true },
+  code: { type: String, required: true },
 });
 
+const productModel = mongoose.model('Product', productSchema);
 
-
-const productModel = model("productModel", productSchema);  // Asegúrate de que el nombre coincida con la referencia
 export { productModel };

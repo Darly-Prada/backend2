@@ -1,25 +1,34 @@
-<h1>Lista de Productos</h1>
+<h2>Mis Productos</h2>
 
-<!-- carrito de Compras -->
-<div class="cartContainer">
-  <h2 class="cartH2">Tu Carrito</h2>
-  <ul id="cartList">
-    {{#each cart.products}}
-      <li class="list">
-        {{this.productId.title}} - {{this.quantity}} - <button class="removeFromCartBtn" data-id="{{this.productId._id}}">Eliminar</button>
-      </li>
+<div id="productList">
+    {{#each products}}
+        <div class="product">
+            <h3 class="product-title">{{this.title}}</h3>
+            <p class="product-description">{{this.description}}</p>
+            <p class="product-price"><strong>Precio:</strong> ${{this.price}}</p>
+            <p class="product-stock"><strong>Stock:</strong> {{this.stock}}</p>
+            <p class="product-category"><strong>Categoría:</strong> {{this.category}}</p>
+            <p class="product-code"><strong>Código:</strong> {{this.code}}</p>
+            <button class="addToCartBtn" data-product-id="{{this._id}}">Agregar al carrito</button>
+            <button class="deleteProductBtn" data-product-id="{{this._id}}">Eliminar Producto</button>
+        </div>
+    {{else}}
+        <p>No hay productos disponibles.</p>
     {{/each}}
-  </ul>
-  
-  <!-- Botón para vaciar el carrito -->
-  <button class="emptyCartBtn btn">Vaciar Carrito</button>
-  <!-- Botón para comprar productos -->
-  <button class="buyButton btn">Comprar mis Productos</button>
 </div>
 
-<div class="container">
-  <!-- Formulario para agregar producto -->
-  <form id="productForm">
+<div class="cartContainer">
+    <h2>Mi Carrito</h2>
+    <ul id="cartList">
+        <li>No hay productos en tu carrito.</li>
+    </ul>
+
+    <button class="emptyCartBtn btn">Vaciar Carrito</button>
+    <button class="buyButton btn">Comprar mis Productos</button>
+</div>
+
+<h2> Manejo de Productos</h2>
+<form id="productForm">
     <input type="text" id="productTitle" placeholder="Nombre del producto" required>
     <input type="number" id="productPrice" placeholder="Precio" required>
     <input type="text" id="productDescription" placeholder="Descripción" required>
@@ -27,17 +36,7 @@
     <input type="text" id="productCode" placeholder="Código" required>
     <input type="number" id="productStock" placeholder="Stock" required>
     <button type="submit">Agregar Producto</button>
-  </form>
-<!-- Lista de productos -->
-  <ul id="productList">
-    {{#each products}}
-      <li id="product-{{this._id}}">
-        {{this.title}} - ${{this.price}} - {{this.description}} - {{this.category}} - {{this.code}} - {{this.stock}}
-        <button class="deleteBtn" data-id="{{this._id}}">Eliminar</button>
-        <button class="addToCartBtn" data-id="{{this._id}}">Agregar al carrito</button>
-      </li>
-    {{/each}}
-  </ul>
-</div> 
- 
+
+</form>
+
 <script src="/static/js/home.js"></script>
