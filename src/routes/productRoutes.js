@@ -3,13 +3,12 @@ import { getProducts, getProductById, addProduct, updateProduct, deleteProduct }
 
 const router = express.Router();
 
-// Obtener todos los productos
 
+// Obtener todos los productos
 router.get('/', async (req, res) => {
   try {
     const products = await getProducts();
-    console.log('Productos obtenidos:', products); // Verifica la estructura de los objetos
-
+    console.log('Productos obtenidos:', products); 
     res.render('home', { products });
   } catch (error) {
     console.error('Error al obtener los productos:', error);
@@ -22,7 +21,7 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const product = await getProductById(id);
-    res.json(product);  // Devuelve el producto encontrado en formato JSON
+    res.json(product);  
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -33,7 +32,7 @@ router.post('/', async (req, res) => {
   const { title, description, price, stock, category, code } = req.body;
   try {
     const newProduct = await addProduct({ title, description, price, stock, category, code });
-    res.status(201).json(newProduct);  // Devuelve el nuevo producto creado
+    res.status(201).json(newProduct); 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

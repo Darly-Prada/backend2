@@ -1,9 +1,8 @@
 const form = document.getElementById('loginForm');
 
 form.addEventListener('submit', e => {
-    e.preventDefault(); // Evitar que la página se recargue al enviar el formulario
+    e.preventDefault(); 
     
-    // Crear un objeto con los datos del formulario
     const data = new FormData(form);
     const obj = {};
     data.forEach((value, key) => obj[key] = value);
@@ -20,15 +19,13 @@ form.addEventListener('submit', e => {
         if (result.status === 200) {
             result.json()
                 .then(json => {
-                    // Guardar el token JWT en localStorage
-                    localStorage.setItem('authToken', json.jwt);  // Guardamos el token JWT
+                // Guardamos el token JWT
+                    localStorage.setItem('authToken', json.jwt);  
 
                     console.log("Token JWT guardado en localStorage:");
-                    console.log(localStorage.getItem('authToken'));  // Verifica que el token esté almacenado correctamente
-
+                    console.log(localStorage.getItem('authToken'));   
                     alert("Login realizado con exito!");
 
-                    // Redirigir al usuario a la página de usuarios (o la página que desees)
                     window.location.replace('/users');
                 });
         } else if (result.status === 401) {

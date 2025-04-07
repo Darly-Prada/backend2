@@ -13,7 +13,6 @@ import initializePassport from './config/passport.config.js';
 
 // import Routes
 import sessionsRouter from './routes/sessions.router.js';
-
 import usersViewRouter from './routes/users.views.router.js';
 import viewsRoutes from "./routes/views.router.js";
 import productRoutes from './routes/productRoutes.js';   
@@ -24,7 +23,6 @@ import cartRoutes from './routes/cartRoutes.js';
 const app = express();
 dotenv.config();
 
-
 // Url Mongo 
 const urlMongo = process.env.MONGO_URL;
 
@@ -34,11 +32,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Configuración de Handlebars
 app.engine('handlebars', handlebars.engine({
-    allowProtoPropertiesByDefault: true,  // Permite acceder a propiedades heredadas
-    allowProtoMethodsByDefault: true,    // Permite acceder a métodos heredados
+    allowProtoPropertiesByDefault: true, 
+    allowProtoMethodsByDefault: true,  
   }));
 
-  // Establecer la carpeta de vistas y el motor de plantillas
+  // Establecer vistas y motor de plantillas
   app.set('views', __dirname + '/views');
   app.set('view engine', 'handlebars');
   
@@ -72,8 +70,6 @@ app.use(passport.session());
 app.use('/', viewsRoutes);  
 app.use('/users', usersViewRouter); 
 app.use("/api/sessions", sessionsRouter);
-
-
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
 

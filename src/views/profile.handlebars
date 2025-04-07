@@ -1,5 +1,8 @@
 <div>
-    <h1>Tu perfil de Usuario </h1>
+    <h1> Perfil de Usuario </h1>
+    <div class="datosUser">
+         <h2> Usuario:</h2>
+    
     <p>{{user.name}}</p>
     <p>{{user.email}}</p>
     <p>{{user.age}}</p>
@@ -7,9 +10,10 @@
     <br>
 
     {{#if user.isAdmin}}
-    <p> Admin-dashBoard: <a href="/users/dashboard-admin">Ingresa</a></p>
+    <p> Admin-dashBoard: <a href="/users/dashboard-admin">Ingresar</a></p>
     {{/if}}
-
+    </div>
+    <br><br><hr>
     <p> <a href="/api/sessions/logout">Logout</a></p>
 </div>
 <script src="/js/users.js"></script>

@@ -267,7 +267,8 @@ width: 80%;
   width: 100%;
   max-width: 400px;
   margin: .5rem auto;
-  padding: .5rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
   border-radius: 12px;
   box-shadow: 0px 4px 15px  rgba(38, 11, 11, 0.5);
   font-weight: bold;
@@ -308,6 +309,7 @@ width: 80%;
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+
 }
 
 #loginForm button:hover {
@@ -326,7 +328,12 @@ width: 80%;
   margin-top: 12px;
 }
 
-
+.divp{
+  align-content: center;
+  padding: 1.5rem;
+  font-size: 1rem;
+  padding: 1rem;
+}
   #registerForm
   {
     display: grid;
@@ -335,11 +342,12 @@ width: 80%;
     color: #313030;
     width: 100%;
     max-width: 400px;
-    margin: .5rem auto;
+    margin: 1rem auto;
     padding: .5rem;
     border-radius: 12px;
     box-shadow: 0px 4px 15px  rgba(38, 11, 11, 0.5);
     font-weight: bold;
+    margin-bottom: 2rem;
   }
 
 
@@ -396,4 +404,16 @@ width: 80%;
   margin-top: .5rem;
 }
 
+.datosUser{
+  width: 50%;
+  margin: 10px auto;
+  padding: 10px;
+  background-color: #bab8ba;
+  color: #050323;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
 

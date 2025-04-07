@@ -5,7 +5,6 @@ import { getProducts, addProduct } from '../managers/productManager.js';
 const router = Router();
 
  
-
 // Configuración de cookie-parser
 router.use(cookieParser("CoderS3cr3tC0d3"));
 
@@ -18,7 +17,6 @@ router.get("/logout", (req, res) => {
     res.send("Sesión cerrada correctamente.");
   });
 });
-
 // Middleware de autenticación
 function auth(req, res, next) {
   if (req.session.user && req.session.admin) {
@@ -27,8 +25,6 @@ function auth(req, res, next) {
     return res.status(403).send("Usuario no autorizado para ingresar a este recurso.");
   }
 }
-
-
 // Ruta privada de prueba
 router.get('/private', auth, (req, res) => {
   res.send("Si estás viendo esto es porque pasaste la autorización a este recurso!");
@@ -40,7 +36,7 @@ router.get('/', async (req, res) => {
     const products = await getProducts();
     console.log('Productos obtenidos:', products); 
 
-    // Renderizar la vista con los productos
+  // Renderizar la vista con los productos
     res.render('home', { products });
   } catch (error) {
     console.error('Error al obtener productos:', error);

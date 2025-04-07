@@ -20,7 +20,7 @@ router.post("/register", async (req, res) => {
         }
 
         // Encriptar la contraseña
-        const hashedPassword = bcrypt.hashSync(password, 10); // El número 10 es el número de rondas de salting
+        const hashedPassword = bcrypt.hashSync(password, 10); 
 
         // Crear el nuevo usuario
         const newUser = new userModel({
@@ -32,10 +32,8 @@ router.post("/register", async (req, res) => {
             role: 'user'  // Asignar rol por defecto
         });
 
-        // Guardar el nuevo usuario en la base de datos
         await newUser.save();
 
-        // Responder con éxito
         res.status(201).send({ message: 'Usuario creado con éxito' });
     } catch (error) {
         console.error("Error al registrar el usuario:", error);
@@ -66,9 +64,9 @@ router.post("/login", async (req, res) => {
 
         // Enviar el token como cookie
         res.cookie("jwtCookieToken", access_token, {
-            maxAge: 60000 * 60, // Expira en 1 hora
-            httpOnly: true, // No accesible desde JavaScript
-            secure: false // Cambiar a `true` en producción con HTTPS
+            maxAge: 60000 * 60, 
+            httpOnly: true, 
+            secure: false 
         });
 
         res.json({
@@ -82,10 +80,10 @@ router.post("/login", async (req, res) => {
     }
 });
 
-// Ruta para obtener los datos del usuario asociado al JWT (si está logueado)
+// Obtener usuario asociado al JWT (si está logueado)
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
     if (req.user) {
-        res.json(req.user); // Devuelve los datos del usuario asociado al token
+        res.json(req.user);
     } else {
         res.status(401).json({ error: 'No autenticado' });
     }
