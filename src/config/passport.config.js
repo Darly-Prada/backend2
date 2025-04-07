@@ -12,11 +12,14 @@ const localStrategy = passportLocal.Strategy;
 const JwtStrategy = jwtStrategy.Strategy;
 const ExtractJWT = jwtStrategy.ExtractJwt;
 
+
+
 const initializePassport = () => {
     /*=============================================
     =                JWTStrategy                  =
     =============================================*/
     passport.use('jwt', new JwtStrategy(
+        
         {
             jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
             secretOrKey: PRIVATE_KEY
@@ -64,7 +67,7 @@ const initializePassport = () => {
                 });
         
                 // Crear el carrito vacío para el usuario
-                const cart = new cartModel({ user: user._id, products: [] });
+            const cart = new cartModel({ user: user._id, products: [] });
                 await cart.save();
         
                 // Asignar el carrito al usuario

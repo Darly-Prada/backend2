@@ -13,12 +13,12 @@ import initializePassport from './config/passport.config.js';
 
 // import Routes
 import sessionsRouter from './routes/sessions.router.js';
-import usersViewRouter from './routes/users.views.router.js';
 
+import usersViewRouter from './routes/users.views.router.js';
 import viewsRoutes from "./routes/views.router.js";
 import productRoutes from './routes/productRoutes.js';   
 import cartRoutes from './routes/cartRoutes.js';   
-import currentRoutes from "./routes/currentRoutes.js";
+
 
 
 const app = express();
@@ -73,10 +73,9 @@ app.use('/', viewsRoutes);
 app.use('/users', usersViewRouter); 
 app.use("/api/sessions", sessionsRouter);
 
+
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
-app.use('/api/current', currentRoutes);
-
 
 
 const SERVER_PORT = process.env.SERVER_PORT;

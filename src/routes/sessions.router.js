@@ -1,20 +1,46 @@
 import { Router } from 'express';
 import passport from 'passport';
-import userModel from '../models/user.model.js'
-import { isValidPassword, generateJWToken } from '../utils.js'
+import userModel from '../models/user.model.js';
+import { isValidPassword, generateJWToken } from '../utils.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+
 
 const router = Router();
 
 
-router.post("/register",
-    passport.authenticate('register', { failureRedirect: '/api/sessions/fail-register' }),
-    async (req, res) => {
-        console.log("Registrando nuevo usuario.");
-        res.status(201).send({ status: "success", message: "Usuario creado con extito." });
-    });
+router.post("/register", async (req, res) => {
+    const { first_name, last_name, email, password, age } = req.body;
 
-router.get("/fail-register", (req, res) => {
-    res.status(401).send({ error: "Failed to process register!" });
+    try {
+        // Verificar si el usuario ya existe
+        const existingUser = await userModel.findOne({ email: email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'El usuario ya existe.' });
+        }
+
+        // Encriptar la contraseña
+        const hashedPassword = bcrypt.hashSync(password, 10); // El número 10 es el número de rondas de salting
+
+        // Crear el nuevo usuario
+        const newUser = new userModel({
+            first_name,
+            last_name,
+            email,
+            password: hashedPassword,
+            age,
+            role: 'user'  // Asignar rol por defecto
+        });
+
+        // Guardar el nuevo usuario en la base de datos
+        await newUser.save();
+
+        // Responder con éxito
+        res.status(201).send({ message: 'Usuario creado con éxito' });
+    } catch (error) {
+        console.error("Error al registrar el usuario:", error);
+        res.status(500).send({ message: 'Error en el servidor' });
+    }
 });
 
 router.post("/login", async (req, res) => {
@@ -22,44 +48,53 @@ router.post("/login", async (req, res) => {
     try {
         const user = await userModel.findOne({ email: email });
         if (!user) return res.status(401).json({ message: 'Usuario no encontrado' });
-
-        if (!isValidPassword(user, password)) {
-            console.warn("Invalid credentials for user: " + email);
-            return res.status(401).send({ status: "error", error: "Credenciales invalidas!!!" });
+        const isValidPassword = (user, password) => {
+            console.log(`Datos a validar: user-password: ${user.password}, password: ${password}`);
+            return bcrypt.compareSync(password, user.password);
         }
-        // Generar un Obj para el JWT - DTO (no agregamos data sencible)
+
+        // Generar el JWT
         const tokenUser = {
             name: `${user.first_name} ${user.last_name}`,
             email: user.email,
             age: user.age,
             role: user.role,
             isAdmin: user.role === "admin"
-        }
+        };
 
-        // generamos el JWT
-        const access_token = generateJWToken(tokenUser)
-        console.log("access_token", access_token);
+        const access_token = generateJWToken(tokenUser);
 
-
-        //2do con Cookie
+        // Enviar el token como cookie
         res.cookie("jwtCookieToken", access_token, {
-            maxAge: 60000,
-            httpOnly: true, // No se expone la cookie
-            // httpOnly: false // si está en HTTPS, si no, no se expone la cookie
-        })
+            maxAge: 60000 * 60, // Expira en 1 hora
+            httpOnly: true, // No accesible desde JavaScript
+            secure: false // Cambiar a `true` en producción con HTTPS
+        });
 
-        res.send({ message: "Login successfull" })
+        res.json({
+            message: "Login exitoso",
+            jwt: access_token
+        });
 
     } catch (error) {
-        console.error(error);
-        return res.status(500).send({ status: "error", error: "Error interno de la applicacion." });
+        console.error("Error en el proceso de login:", error);
+        return res.status(500).send({ status: "error", error: "Error interno de la aplicación." });
     }
-})
+});
+
+// Ruta para obtener los datos del usuario asociado al JWT (si está logueado)
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+    if (req.user) {
+        res.json(req.user); // Devuelve los datos del usuario asociado al token
+    } else {
+        res.status(401).json({ error: 'No autenticado' });
+    }
+});
+
+// Ruta de logout para eliminar la cookie
 router.get("/logout", (req, res) => {
     res.clearCookie("jwtCookieToken");
     res.redirect("/users/login");
 });
 
-
-
-export default router
+export default router;
