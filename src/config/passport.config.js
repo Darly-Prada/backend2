@@ -1,7 +1,7 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
 import jwtStrategy from 'passport-jwt';
-
+import jwt from 'jsonwebtoken';
 import userModel from '../models/user.model.js';
 import { cartModel } from '../models/cartModel.js';
 
@@ -11,6 +11,7 @@ import { createHash, PRIVATE_KEY, cookieExtractor } from '../utils.js';
 const localStrategy = passportLocal.Strategy;
 const JwtStrategy = jwtStrategy.Strategy;
 const ExtractJWT = jwtStrategy.ExtractJwt;
+
 
 
 
@@ -41,7 +42,6 @@ const initializePassport = () => {
     =============================================*/
     
     // Estrategia de registro de usuario
-    
     passport.use('register', new localStrategy(
         { passReqToCallback: true, usernameField: 'email' },
         async (req, username, password, done) => {
@@ -62,7 +62,7 @@ const initializePassport = () => {
                     last_name,
                     email,  
                     age,
-                    password: createHash(password),  
+                    password,
                     loggedBy: 'App'
                 });
         
@@ -83,7 +83,6 @@ const initializePassport = () => {
             }
         }
     ));
-
     /*=============================================
     = Funciones de Serialización y Desserialización =
     =============================================*/

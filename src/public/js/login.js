@@ -10,7 +10,7 @@ form.addEventListener('submit', e => {
     // Hacer una solicitud POST a la ruta de login
     fetch('/api/sessions/login', {
         method: 'POST',
-        body: JSON.stringify(obj),
+        body: JSON.stringify(obj),  
         headers: {
             'Content-Type': 'application/json'
         }
@@ -19,7 +19,7 @@ form.addEventListener('submit', e => {
         if (result.status === 200) {
             result.json()
                 .then(json => {
-                // Guardamos el token JWT
+                    // Guardamos el token JWT
                     localStorage.setItem('authToken', json.jwt);  
 
                     console.log("Token JWT guardado en localStorage:");
@@ -37,4 +37,4 @@ form.addEventListener('submit', e => {
         console.error("Error al realizar el login:", err);
         alert("Hubo un error al intentar iniciar sesión.");
     });
-});
+});  

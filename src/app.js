@@ -1,12 +1,12 @@
 import express from 'express';
 import path from 'path';
 import handlebars from 'express-handlebars';
-import __dirname from './utils.js';
+
+import { __dirname } from './utils.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-
 import { connectMongoDB } from "./connect/mongo.js";
-import dotenv from 'dotenv'
+
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
@@ -17,17 +17,15 @@ import usersViewRouter from './routes/users.views.router.js';
 import viewsRoutes from "./routes/views.router.js";
 import productRoutes from './routes/productRoutes.js';   
 import cartRoutes from './routes/cartRoutes.js';   
+import dotenv from 'dotenv'
 
-
-
-const app = express();
 dotenv.config();
+const app = express();
 
 // Url Mongo 
 const urlMongo = process.env.MONGO_URL;
 
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
 
 // Configuración de Handlebars
@@ -39,8 +37,7 @@ app.engine('handlebars', handlebars.engine({
   // Establecer vistas y motor de plantillas
   app.set('views', __dirname + '/views');
   app.set('view engine', 'handlebars');
-  
-  
+    
   //archivos estáticos
   app.use('/static', express.static(path.join(__dirname, 'public')));
   app.use(express.static(__dirname + '/public'));

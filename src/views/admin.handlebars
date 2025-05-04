@@ -7,4 +7,10 @@
     <p> Profile-admin: <a href="/users">Ingresa</a></p>
     <p> <a href="/api/sessions/logout">Logout</a></p>
 </div>
+
+{{#ifCond user.role '==' 'admin'}}
+  <button onclick="editarProducto('{{this._id}}')">Editar</button>
+  <button onclick="eliminarProducto('{{this._id}}')">Eliminar</button>
+{{/ifCond}}
+
 <script src="/js/admin.js"></script>

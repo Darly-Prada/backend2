@@ -1,7 +1,15 @@
 import express from 'express';
 import { getProducts, getProductById, addProduct, updateProduct, deleteProduct } from '../managers/productManager.js';
 
+import passport from 'passport';
+import { authorizeRoles } from '../middlewares/authorizeRoles.js';
+
+
 const router = express.Router();
+
+router.post('/', passport.authenticate('jwt', { session: false }), authorizeRoles('admin'), addProduct);
+router.put('/:id', passport.authenticate('jwt', { session: false }), authorizeRoles('admin'), updateProduct);
+router.delete('/:id', passport.authenticate('jwt', { session: false }), authorizeRoles('admin'), deleteProduct);
 
 
 // Obtener todos los productos
@@ -37,6 +45,7 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // Actualizar un producto existente
 router.put('/:id', async (req, res) => {

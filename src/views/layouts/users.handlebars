@@ -1,19 +1,5 @@
-<div>
-    <h1>Perfil de Usuario</h1>
-    <div class="datosUser">
-        <h2>Usuario:</h2>
-        <p>{{user.name}}</p>
-        <p>{{user.email}}</p>
-        <p>{{user.age}}</p>
+<h1>Bienvenido, {{user.name}}</h1>
 
-        <br>
-
-        {{#if user.isAdmin}}
-        <p> Admin-dashBoard: <a href="/users/dashboard-admin">Ingresar</a></p>
-        {{/if}}
-    </div>
-
-    <br><br><hr>
 
  <h2>Lista de productos disponibles</h2>
    <div id="productList">   
@@ -28,10 +14,3 @@
         {{/each}}
     </ul>
    </div>
-
-    <br>
-
-    <p><a href="/api/sessions/logout">Logout</a></p>
-</div>
-
-<script src="/js/users.js"></script>

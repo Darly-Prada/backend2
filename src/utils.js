@@ -3,70 +3,66 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
+import dotenv from 'dotenv';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+dotenv.config(); // Cargar variables desde .env
 
+// Paths
+export const __filename = fileURLToPath(import.meta.url);
+export const __dirname = dirname(__filename);
 
-
-export default __dirname;
- //isValidPassword, generateJWToken
-// Generar HASH
-
+// Hash de contraseñas
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
-export const isValidPassword = (user, password) => {
-    console.log(`Datos a validar: user-password: ${user.password}, password: ${password}`);
-    return bcrypt.compareSync(password, user.password);
-}
+// Validación de contraseña
+export const isValidPassword = (inputPassword, userHashedPassword) => {
+    console.log(`Validando: password: ${inputPassword}, hashed: ${userHashedPassword}`);
+    return bcrypt.compareSync(inputPassword, userHashedPassword); 
+};
 
-export const PRIVATE_KEY = "CoderhouseBackendCourseSecretKeyJWT";
+// Clave privada para JWT (usar variable de entorno si está disponible)
+export const PRIVATE_KEY = process.env.JWT_PRIVATE_KEY || "CoderhouseBackendCourseSecretKeyJWT";
+
+// Generar token JWT
 export const generateJWToken = (user) => {
     return jwt.sign({ user }, PRIVATE_KEY, { expiresIn: '24h' });
 };
 
+// Middleware para estrategias de Passport
 export const passportCall = (strategy) => {
-
     return async (req, res, next) => {
-        console.log("Entrando a llamar estrategia: ");
-        console.log(strategy);
+        console.log("Ejecutando estrategia Passport:", strategy);
         passport.authenticate(strategy, function (err, user, info) {
             if (err) return next(err);
             if (!user) {
-                return res.status(401).send({ error: info.messages ? info.messages : info.toString() })
+                return res.status(401).send({
+                    error: info?.message || info.toString()
+                });
             }
-
-            console.log("Usuario obtenido del strategy: ");
-            console.log(user);
+            console.log("Usuario autenticado:", user);
             req.user = user;
-            next()
+            next();
         })(req, res, next);
-    }
-}
+    };
+};
+
+// Extraer JWT desde cookies
 export const cookieExtractor = req => {
     let token = null;
-    console.log("CookieExtractor");
-    console.log("req.cookies", req);
-    console.log("req.cookies", req.cookies);
-
     if (req && req.cookies) {
-        console.log("Cookies presentes: ");
-        console.log(req.cookie);
         token = req.cookies['jwtCookieToken'];
-        console.log("Token obtenido desde Cookie:");
-        console.log(token);
+        console.log("Token JWT extraído desde cookie:", token);
     }
     return token;
-}
+};
 
-
-// Maneja el rol del user
+// Autorización por rol
 export const authorization = (role) => {
     return async (req, res, next) => {
-        if (!req.user) return res.status(401).send("Unauthorized: User not found in JWT");
+        if (!req.user) return res.status(401).send("No autorizado: usuario no encontrado.");
         if (req.user.role !== role) {
-            return res.status(403).send("Usuario sin permisos de este rol, comuniquese con el administrador");
+            return res.status(403).send("Acceso denegado: permisos insuficientes.");
         }
         next();
-    }
-}
+    };
+};
